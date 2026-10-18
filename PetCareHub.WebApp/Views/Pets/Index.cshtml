@@ -1,0 +1,50 @@
+@model List<PetCareHub.WebApp.Models.PetDto>
+@{
+    ViewData["Title"] = "Pets";
+}
+
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Pets</h1>
+        <p class="text-gray-500 text-sm mt-1">Manage your pets</p>
+    </div>
+    <a href="/Pets/Create" class="inline-flex items-center gap-2 px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition">
+        + Add Pet
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="bg-white rounded-xl border border-gray-200 p-12 text-center">
+        <div class="text-4xl mb-3">🐾</div>
+        <h3 class="font-semibold text-gray-900">No pets yet</h3>
+        <p class="text-gray-500 text-sm mt-1 mb-4">Create your first pet to get started</p>
+        <a href="/Pets/Create" class="inline-flex px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700">Add Pet</a>
+    </div>
+}
+else
+{
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        @foreach (var pet in Model)
+        {
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition p-5">
+                <div class="flex items-start gap-4">
+                    <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center text-2xl flex-shrink-0">
+                        @(pet.Species.ToLower().Contains("cat") ? "🐱" : pet.Species.ToLower().Contains("dog") ? "🐶" : "🐾")
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-semibold text-gray-900 truncate">@pet.Name</h3>
+                        <p class="text-sm text-gray-500">@pet.Species</p>
+                        @if (!string.IsNullOrEmpty(pet.Breed))
+                        {
+                            <p class="text-xs text-gray-400 mt-0.5">@pet.Breed</p>
+                        }
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+                    <a href="/Pets/Details/@pet.Id" class="text-sm text-sky-600 hover:text-sky-700 font-medium">View details →</a>
+                </div>
+            </div>
+        }
+    </div>
+}

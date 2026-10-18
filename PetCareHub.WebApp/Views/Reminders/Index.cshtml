@@ -1,0 +1,56 @@
+@model List<PetCareHub.WebApp.Models.ReminderDto>
+@{
+    ViewData["Title"] = "Reminders";
+}
+
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Reminders</h1>
+        <p class="text-gray-500 text-sm mt-1">Upcoming care tasks</p>
+    </div>
+    <a href="/Reminders/Create" class="inline-flex items-center gap-2 px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition">
+        + Add Reminder
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="bg-white rounded-xl border border-gray-200 p-12 text-center">
+        <div class="text-4xl mb-3">🔔</div>
+        <h3 class="font-semibold text-gray-900">No upcoming reminders</h3>
+        <p class="text-gray-500 text-sm mt-1 mb-4">Create a reminder for vaccinations, medicine, or grooming</p>
+        <a href="/Reminders/Create" class="inline-flex px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700">Add Reminder</a>
+    </div>
+}
+else
+{
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <ul class="divide-y divide-gray-100">
+            @foreach (var r in Model)
+            {
+                <li class="px-5 py-4 flex items-center justify-between gap-4 hover:bg-gray-50">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-lg flex-shrink-0">
+                            @(r.Type switch {
+                                "Vaccination" => "💉",
+                                "Medicine" => "💊",
+                                "Grooming" => "✂️",
+                                _ => "🔔"
+                            })
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-medium text-gray-900 truncate">@r.Title</p>
+                            <p class="text-sm text-gray-500">@r.PetName • Due @r.DueDate.ToString("MMM dd, yyyy")</p>
+                        </div>
+                    </div>
+                    <form asp-action="Complete" method="post">
+                        <input type="hidden" name="id" value="@r.Id" />
+                        <button type="submit" class="px-3 py-1.5 text-sm rounded-lg bg-green-50 text-green-700 hover:bg-green-100 font-medium">
+                            Mark Done
+                        </button>
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+}

@@ -1,0 +1,45 @@
+@model PetCareHub.WebApp.Models.PetDto
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="mb-6">
+    <a href="/Pets" class="text-sm text-gray-500 hover:text-gray-700">← Back to Pets</a>
+</div>
+
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div class="bg-gradient-to-r from-sky-500 to-sky-600 px-6 py-8 text-white">
+        <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-3xl">
+                @(Model.Species.ToLower().Contains("cat") ? "🐱" : Model.Species.ToLower().Contains("dog") ? "🐶" : "🐾")
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">@Model.Name</h1>
+                <p class="text-sky-100">@Model.Species @(!string.IsNullOrEmpty(Model.Breed) ? $"• {Model.Breed}" : "")</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Gender</p>
+            <p class="mt-1 text-gray-900">@(Model.Gender ?? "—")</p>
+        </div>
+        <div>
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Date of Birth</p>
+            <p class="mt-1 text-gray-900">@(Model.DateOfBirth?.ToString("MMM dd, yyyy") ?? "—")</p>
+        </div>
+        <div class="sm:col-span-2">
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Notes</p>
+            <p class="mt-1 text-gray-900">@(string.IsNullOrEmpty(Model.Notes) ? "—" : Model.Notes)</p>
+        </div>
+        <div>
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Created</p>
+            <p class="mt-1 text-gray-900">@Model.CreatedAt.ToString("MMM dd, yyyy")</p>
+        </div>
+    </div>
+</div>
+
+<div class="mt-6 flex gap-3">
+    <a href="/Reminders/Create" class="px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700">Add Reminder</a>
+</div>

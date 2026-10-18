@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PetCareHub.Domain\PetCareHub.Domain.csproj" />
+    <ProjectReference Include="..\PetCareHub.Database\PetCareHub.Database.csproj" />
+    <ProjectReference Include="..\PetCareHub.Shared\PetCareHub.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
