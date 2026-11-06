@@ -76,4 +76,4 @@ dotnet run
 
 API uses a fixed demo user ID. No login required for MVP.
 
-For build and smoke-test instructions, see the [MVP quickstart](specs/001-mvp-completion/quickstart.md).
+To verify the MVP, run `dotnet build PetCareHub.sln`, then run `pwsh -NoProfile -File scripts/smoke-mvp.ps1` from the repository root. The smoke test uses a temporary SQLite database.
