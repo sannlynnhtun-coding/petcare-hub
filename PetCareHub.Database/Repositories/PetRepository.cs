@@ -32,12 +32,6 @@ public class PetRepository : IPetRepository
         await _db.Pets.AddAsync(pet);
     }
 
-    public async Task UpdateAsync(Pet pet)
-    {
-        _db.Pets.Update(pet);
-        await Task.CompletedTask;
-    }
-
     public async Task SaveChangesAsync()
     {
         await _db.SaveChangesAsync();

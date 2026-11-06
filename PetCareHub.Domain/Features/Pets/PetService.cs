@@ -59,7 +59,6 @@ public class PetService : IPetService
         pet.Notes = request.Notes?.Trim();
         pet.PhotoUrl = request.PhotoUrl?.Trim();
 
-        await _petRepository.UpdateAsync(pet);
         await _petRepository.SaveChangesAsync();
 
         return Result.Success("Pet updated successfully.");
