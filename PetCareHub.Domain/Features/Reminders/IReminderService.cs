@@ -9,6 +9,8 @@ public interface IReminderService
     Task<Result<ReminderDto>> CreateAsync(Guid userId, CreateReminderRequest request);
     Task<Result> CompleteAsync(Guid userId, Guid reminderId);
 
+
     // Queries
+    Task<Result<List<ReminderDto>>> GetPendingAsync(Guid userId);
     Task<Result<List<ReminderDto>>> GetUpcomingAsync(Guid userId);
 }

@@ -23,6 +23,13 @@ public class RemindersController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
+    [HttpGet("pending")]
+    public async Task<IActionResult> GetPending()
+    {
+        var result = await _reminderService.GetPendingAsync(DemoUserId);
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateReminderRequest request)
     {

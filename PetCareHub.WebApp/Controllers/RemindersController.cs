@@ -15,7 +15,7 @@ public class RemindersController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var result = await _api.GetUpcomingRemindersAsync();
+        var result = await _api.GetPendingRemindersAsync();
         return View(result?.Data ?? new List<ReminderDto>());
     }
 

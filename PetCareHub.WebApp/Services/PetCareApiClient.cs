@@ -41,6 +41,9 @@ public class PetCareApiClient
         return await _http.GetFromJsonAsync<ApiResult<List<ReminderDto>>>("api/reminders/upcoming");
     }
 
+    public Task<ApiResult<List<ReminderDto>>?> GetPendingRemindersAsync() =>
+        _http.GetFromJsonAsync<ApiResult<List<ReminderDto>>>("api/reminders/pending");
+
     public async Task<ApiResult<ReminderDto>?> CreateReminderAsync(CreateReminderRequest request)
     {
         var response = await _http.PostAsJsonAsync("api/reminders", request);

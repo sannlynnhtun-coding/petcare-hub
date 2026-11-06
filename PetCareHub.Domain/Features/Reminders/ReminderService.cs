@@ -91,22 +91,23 @@ public class ReminderService : IReminderService
     public async Task<Result<List<ReminderDto>>> GetUpcomingAsync(Guid userId)
     {
         var reminders = await _reminderRepository.GetUpcomingByUserAsync(userId);
-
-        var dtos = reminders.Select(r =>
-        {
-            var strategy = _strategyFactory.GetStrategy(r.Type);
-            return new ReminderDto(
-                r.Id,
-                r.PetId,
-                r.Pet?.Name ?? "Unknown",
-                r.Type,
-                strategy.GetDisplayTitle(r.Title),
-                r.Notes,
-                r.DueDate,
-                r.IsCompleted,
-                r.CompletedAt);
-        }).ToList();
-
-        return Result<List<ReminderDto>>.Success(dtos);
+        return Result<List<ReminderDto>>.Success(reminders.Select(MapForList).ToList());
     }
+
+    public async Task<Result<List<ReminderDto>>> GetPendingAsync(Guid userId)
+    {
+        var reminders = await _reminderRepository.GetPendingByUserAsync(userId);
+        return Result<List<ReminderDto>>.Success(reminders.Select(MapForList).ToList());
+    }
+
+    private ReminderDto MapForList(Reminder reminder) => new(
+        reminder.Id,
+        reminder.PetId,
+        reminder.Pet?.Name ?? "Unknown",
+        reminder.Type,
+        _strategyFactory.GetStrategy(reminder.Type).GetDisplayTitle(reminder.Title),
+        reminder.Notes,
+        reminder.DueDate,
+        reminder.IsCompleted,
+        reminder.CompletedAt);
 }

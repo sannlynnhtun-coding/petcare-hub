@@ -21,12 +21,18 @@ public class ReminderRepository : IReminderRepository
     {
         var until = DateTime.UtcNow.Date.AddDays(days);
 
-        return await _db.Reminders
+        return await PendingByUser(userId)
+            .Where(r => r.DueDate <= until)
             .Include(r => r.Pet)
-            .Where(r => r.Pet!.UserId == userId && !r.IsCompleted && r.DueDate <= until)
             .OrderBy(r => r.DueDate)
             .ToListAsync();
     }
+
+    public Task<List<Reminder>> GetPendingByUserAsync(Guid userId) =>
+        PendingByUser(userId).Include(r => r.Pet).OrderBy(r => r.DueDate).ToListAsync();
+
+    private IQueryable<Reminder> PendingByUser(Guid userId) =>
+        _db.Reminders.Where(r => r.Pet!.UserId == userId && !r.IsCompleted);
 
     public async Task<List<Reminder>> GetByPetAsync(Guid petId)
     {
