@@ -19,15 +19,3 @@ public record UpdatePetRequest(
     string? Notes,
     string? PhotoUrl
 );
-
-public record PetDto(
-    Guid Id,
-    string Name,
-    string Species,
-    string? Breed,
-    DateTime? DateOfBirth,
-    string? Gender,
-    string? Notes,
-    string? PhotoUrl,
-    DateTime CreatedAt
-);

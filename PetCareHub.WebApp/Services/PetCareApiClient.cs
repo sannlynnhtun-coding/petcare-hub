@@ -1,3 +1,4 @@
+using PetCareHub.Shared;
 using System.Net;
 using System.Net.Http.Json;
 using PetCareHub.WebApp.Models;

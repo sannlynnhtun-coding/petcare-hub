@@ -1,3 +1,5 @@
+using PetCareHub.Shared;
+
 namespace PetCareHub.Domain.Features.Reminders;
 
 // Factory + Strategy combination
@@ -7,14 +9,15 @@ public class ReminderStrategyFactory
 
     public ReminderStrategyFactory()
     {
-        _strategies = new Dictionary<string, IReminderStrategy>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["Vaccination"] = new VaccinationReminderStrategy(),
-            ["Medicine"] = new MedicineReminderStrategy(),
-            ["Grooming"] = new GroomingReminderStrategy(),
-            ["Checkup"] = new CheckupReminderStrategy(),
-            ["Custom"] = new DefaultReminderStrategy()
-        };
+        IReminderStrategy[] strategies =
+        [
+            new VaccinationReminderStrategy(),
+            new MedicineReminderStrategy(),
+            new GroomingReminderStrategy(),
+            new CheckupReminderStrategy(),
+            new DefaultReminderStrategy()
+        ];
+        _strategies = strategies.ToDictionary(strategy => strategy.Type, StringComparer.OrdinalIgnoreCase);
     }
 
     public IReminderStrategy GetStrategy(string type)
@@ -22,6 +25,6 @@ public class ReminderStrategyFactory
         if (_strategies.TryGetValue(type, out var strategy))
             return strategy;
 
-        return _strategies["Custom"];
+        return _strategies[ReminderTypes.Custom];
     }
 }

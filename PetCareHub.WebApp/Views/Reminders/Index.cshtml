@@ -1,4 +1,4 @@
-@model List<PetCareHub.WebApp.Models.ReminderDto>
+@model List<ReminderDto>
 @{
     ViewData["Title"] = "Reminders";
 }
@@ -32,9 +32,9 @@ else
                     <div class="flex items-center gap-4 min-w-0">
                         <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-lg flex-shrink-0">
                             @(r.Type switch {
-                                "Vaccination" => "💉",
-                                "Medicine" => "💊",
-                                "Grooming" => "✂️",
+                                ReminderTypes.Vaccination => "💉",
+                                ReminderTypes.Medicine => "💊",
+                                ReminderTypes.Grooming => "✂️",
                                 _ => "🔔"
                             })
                         </div>

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PetCareHub.WebApp.Services;
+using PetCareHub.WebApp.Models;
 
 namespace PetCareHub.WebApp.Controllers;
 
@@ -17,11 +18,6 @@ public class HomeController : Controller
         var petsResult = await _api.GetPetsAsync();
         var remindersResult = await _api.GetUpcomingRemindersAsync();
 
-        ViewBag.Pets = petsResult?.Data ?? new();
-        ViewBag.Reminders = remindersResult?.Data ?? new();
-        ViewBag.PetCount = petsResult?.Data?.Count ?? 0;
-        ViewBag.ReminderCount = remindersResult?.Data?.Count ?? 0;
-
-        return View();
+        return View(new DashboardModel(petsResult?.Data ?? [], remindersResult?.Data ?? []));
     }
 }

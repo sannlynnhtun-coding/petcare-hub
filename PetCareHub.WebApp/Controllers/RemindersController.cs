@@ -1,3 +1,4 @@
+using PetCareHub.Shared;
 using Microsoft.AspNetCore.Mvc;
 using PetCareHub.WebApp.Models;
 using PetCareHub.WebApp.Services;
@@ -21,31 +22,32 @@ public class RemindersController : Controller
 
     public async Task<IActionResult> Create()
     {
-        // Load pets for dropdown
-        var petsResult = await _api.GetPetsAsync();
-        ViewBag.Pets = petsResult?.Data ?? new List<PetDto>();
-        return View(new CreateReminderRequest());
+        return await CreateViewAsync(new CreateReminderRequest());
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateReminderRequest model)
     {
-        var petsResult = await _api.GetPetsAsync();
-        ViewBag.Pets = petsResult?.Data ?? new List<PetDto>();
-
         if (!ModelState.IsValid)
-            return View(model);
+            return await CreateViewAsync(model);
 
         var result = await _api.CreateReminderAsync(model);
 
         if (result is null || !result.IsSuccess)
         {
             ViewBag.Error = result?.Message ?? "Failed to create reminder.";
-            return View(model);
+            return await CreateViewAsync(model);
         }
 
         TempData["Success"] = "Reminder created successfully!";
         return RedirectToAction(nameof(Index));
+    }
+
+    private async Task<IActionResult> CreateViewAsync(CreateReminderRequest model)
+    {
+        var pets = await _api.GetPetsAsync();
+        model.Pets = pets?.Data ?? [];
+        return View(nameof(Create), model);
     }
 
     [HttpGet]

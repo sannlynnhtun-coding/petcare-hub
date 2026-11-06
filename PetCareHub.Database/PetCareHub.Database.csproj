@@ -15,4 +15,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PetCareHub.Shared\PetCareHub.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

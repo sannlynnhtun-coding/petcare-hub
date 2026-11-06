@@ -5,5 +5,4 @@ public interface IReminderStrategy
 {
     string Type { get; }
     string GetDisplayTitle(string title);
-    bool IsOverdue(DateTime dueDate);
 }

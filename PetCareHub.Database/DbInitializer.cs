@@ -1,4 +1,5 @@
 using PetCareHub.Database.Entities;
+using PetCareHub.Shared;
 
 namespace PetCareHub.Database;
 
@@ -72,21 +73,21 @@ public static class DbInitializer
         // ========== 15 REMINDERS ==========
         var reminders = new List<Reminder>
         {
-            MakeRem(pets[0], "Vaccination", "Annual rabies booster", "Book vet appointment", 5),
-            MakeRem(pets[1], "Grooming", "Nail trimming", "Every 4 to 6 weeks", 3),
-            MakeRem(pets[2], "Medicine", "Heartworm prevention", "Monthly tablet", 1),
-            MakeRem(pets[3], "Checkup", "Dental cleaning", "Recommended by vet", 12),
-            MakeRem(pets[4], "Vaccination", "DHPP booster due", null, 18),
-            MakeRem(pets[5], "Medicine", "Monthly deworming", null, 6),
-            MakeRem(pets[6], "Checkup", "Breathing follow-up", "Monitor during hot weather", 9),
-            MakeRem(pets[7], "Grooming", "Full grooming session", "Long coat care", 4),
-            MakeRem(pets[8], "Medicine", "Joint supplement refill", "Running low", 2),
-            MakeRem(pets[9], "Vaccination", "Bordetella annual", null, 25),
-            MakeRem(pets[10], "Grooming", "Nail and ear cleaning", null, 7),
-            MakeRem(pets[11], "Checkup", "Senior bloodwork", "Yearly panel", 14),
-            MakeRem(pets[12], "Grooming", "Haircut appointment", "Poodle coat", 8),
-            MakeRem(pets[13], "Grooming", "Persian coat brushing", "Daily brush reminder", 1),
-            MakeRem(pets[14], "Vaccination", "Rabies vaccine due", null, 22)
+            MakeRem(pets[0], ReminderTypes.Vaccination, "Annual rabies booster", "Book vet appointment", 5),
+            MakeRem(pets[1], ReminderTypes.Grooming, "Nail trimming", "Every 4 to 6 weeks", 3),
+            MakeRem(pets[2], ReminderTypes.Medicine, "Heartworm prevention", "Monthly tablet", 1),
+            MakeRem(pets[3], ReminderTypes.Checkup, "Dental cleaning", "Recommended by vet", 12),
+            MakeRem(pets[4], ReminderTypes.Vaccination, "DHPP booster due", null, 18),
+            MakeRem(pets[5], ReminderTypes.Medicine, "Monthly deworming", null, 6),
+            MakeRem(pets[6], ReminderTypes.Checkup, "Breathing follow-up", "Monitor during hot weather", 9),
+            MakeRem(pets[7], ReminderTypes.Grooming, "Full grooming session", "Long coat care", 4),
+            MakeRem(pets[8], ReminderTypes.Medicine, "Joint supplement refill", "Running low", 2),
+            MakeRem(pets[9], ReminderTypes.Vaccination, "Bordetella annual", null, 25),
+            MakeRem(pets[10], ReminderTypes.Grooming, "Nail and ear cleaning", null, 7),
+            MakeRem(pets[11], ReminderTypes.Checkup, "Senior bloodwork", "Yearly panel", 14),
+            MakeRem(pets[12], ReminderTypes.Grooming, "Haircut appointment", "Poodle coat", 8),
+            MakeRem(pets[13], ReminderTypes.Grooming, "Persian coat brushing", "Daily brush reminder", 1),
+            MakeRem(pets[14], ReminderTypes.Vaccination, "Rabies vaccine due", null, 22)
         };
         db.Reminders.AddRange(reminders);
 

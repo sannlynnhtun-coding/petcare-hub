@@ -1,12 +1,12 @@
+using PetCareHub.Shared;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text.Json.Serialization;
 
 namespace PetCareHub.WebApp.Models;
 
 // Shared Result from API
-public class ApiResult<T>
+public class ApiResult<T> : ApiResult
 {
-    public bool IsSuccess { get; set; }
-    public string Message { get; set; } = string.Empty;
     public T? Data { get; set; }
 }
 
@@ -17,19 +17,6 @@ public class ApiResult
 }
 
 // Pet
-public class PetDto
-{
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Species { get; set; } = string.Empty;
-    public string? Breed { get; set; }
-    public DateTime? DateOfBirth { get; set; }
-    public string? Gender { get; set; }
-    public string? Notes { get; set; }
-    public string? PhotoUrl { get; set; }
-    public DateTime CreatedAt { get; set; }
-}
-
 public class PetProfileRequest
 {
     public string Name { get; set; } = string.Empty;
@@ -42,27 +29,17 @@ public class PetProfileRequest
 }
 
 // Reminder
-public class ReminderDto
-{
-    public Guid Id { get; set; }
-    public Guid PetId { get; set; }
-    public string PetName { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string? Notes { get; set; }
-    public DateTime DueDate { get; set; }
-    public bool IsCompleted { get; set; }
-    public DateTime? CompletedAt { get; set; }
-}
-
 public class CreateReminderRequest : ReminderEditFields
 {
     public Guid PetId { get; set; }
+
+    [BindNever, JsonIgnore]
+    public IReadOnlyList<PetDto> Pets { get; set; } = [];
 }
 
 public class ReminderEditFields
 {
-    public string Type { get; set; } = "Custom";
+    public string Type { get; set; } = ReminderTypes.Custom;
     public string Title { get; set; } = string.Empty;
     public string? Notes { get; set; }
     [BindRequired]

@@ -1,3 +1,4 @@
+using PetCareHub.Shared;
 using Microsoft.AspNetCore.Mvc;
 using PetCareHub.WebApp.Models;
 using PetCareHub.WebApp.Services;

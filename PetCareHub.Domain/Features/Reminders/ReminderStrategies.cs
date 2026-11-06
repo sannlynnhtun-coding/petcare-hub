@@ -1,47 +1,39 @@
+using PetCareHub.Shared;
+
 namespace PetCareHub.Domain.Features.Reminders;
 
 // Strategy Pattern - concrete strategies
 public class VaccinationReminderStrategy : IReminderStrategy
 {
-    public string Type => "Vaccination";
+    public string Type => ReminderTypes.Vaccination;
 
-    public string GetDisplayTitle(string title) => $"[Vaccination] {title}";
-
-    public bool IsOverdue(DateTime dueDate) => dueDate.Date < DateTime.UtcNow.Date;
+    public string GetDisplayTitle(string title) => $"[{Type}] {title}";
 }
 
 public class MedicineReminderStrategy : IReminderStrategy
 {
-    public string Type => "Medicine";
+    public string Type => ReminderTypes.Medicine;
 
-    public string GetDisplayTitle(string title) => $"[Medicine] {title}";
-
-    public bool IsOverdue(DateTime dueDate) => dueDate.Date < DateTime.UtcNow.Date;
+    public string GetDisplayTitle(string title) => $"[{Type}] {title}";
 }
 
 public class GroomingReminderStrategy : IReminderStrategy
 {
-    public string Type => "Grooming";
+    public string Type => ReminderTypes.Grooming;
 
-    public string GetDisplayTitle(string title) => $"[Grooming] {title}";
-
-    public bool IsOverdue(DateTime dueDate) => dueDate.Date < DateTime.UtcNow.Date;
+    public string GetDisplayTitle(string title) => $"[{Type}] {title}";
 }
 
 public class CheckupReminderStrategy : IReminderStrategy
 {
-    public string Type => "Checkup";
+    public string Type => ReminderTypes.Checkup;
 
-    public string GetDisplayTitle(string title) => $"[Checkup] {title}";
-
-    public bool IsOverdue(DateTime dueDate) => dueDate.Date < DateTime.UtcNow.Date;
+    public string GetDisplayTitle(string title) => $"[{Type}] {title}";
 }
 
 public class DefaultReminderStrategy : IReminderStrategy
 {
-    public string Type => "Custom";
+    public string Type => ReminderTypes.Custom;
 
     public string GetDisplayTitle(string title) => title;
-
-    public bool IsOverdue(DateTime dueDate) => dueDate.Date < DateTime.UtcNow.Date;
 }
