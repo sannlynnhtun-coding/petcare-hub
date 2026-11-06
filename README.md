@@ -31,7 +31,7 @@ PetCareHub/
 ## How to Run
 
 ### Requirements
-- .NET 9 or .NET 10 SDK
+- .NET 10 SDK
 
 ### Steps
 
@@ -64,7 +64,7 @@ dotnet run
 
 - **Dashboard** – pets count + upcoming reminders
 - **Pets** – list, create, view details
-- **Reminders** – list upcoming, create, mark as done
+- **Reminders** – create, edit and complete reminders from the list of all pending tasks. The Dashboard shows overdue tasks and tasks due through the next 14 days.
 
 ## UI
 
@@ -76,4 +76,4 @@ dotnet run
 
 API uses a fixed demo user ID. No login required for MVP.
 
-Happy learning!
+For build and smoke-test instructions, see the [MVP quickstart](specs/001-mvp-completion/quickstart.md).
