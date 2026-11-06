@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 // Database - SQLite for easy local run (no SQL Server needed)
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=petcarehub.db"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("PetCareHub") ?? "Data Source=petcarehub.db"));
 
 // Repositories (Repository Pattern)
 builder.Services.AddScoped<IPetRepository, PetRepository>();
