@@ -8,12 +8,10 @@ builder.Services.AddControllersWithViews(options => options.Filters.Add(new Auto
 // API Base URL - change port if your API runs on different port
 var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5280/";
 
-builder.Services.AddHttpClient("PetCareApi", client =>
+builder.Services.AddHttpClient<PetCareApiClient>(client =>
 {
     client.BaseAddress = new Uri(apiBaseUrl);
 });
-
-builder.Services.AddScoped<PetCareApiClient>();
 
 var app = builder.Build();
 
