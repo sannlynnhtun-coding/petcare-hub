@@ -55,9 +55,13 @@ public class ReminderDto
     public DateTime? CompletedAt { get; set; }
 }
 
-public class CreateReminderRequest
+public class CreateReminderRequest : ReminderEditFields
 {
     public Guid PetId { get; set; }
+}
+
+public class ReminderEditFields
+{
     public string Type { get; set; } = "Custom";
     public string Title { get; set; } = string.Empty;
     public string? Notes { get; set; }

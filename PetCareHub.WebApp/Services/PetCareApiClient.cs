@@ -44,6 +44,22 @@ public class PetCareApiClient
     public Task<ApiResult<List<ReminderDto>>?> GetPendingRemindersAsync() =>
         _http.GetFromJsonAsync<ApiResult<List<ReminderDto>>>("api/reminders/pending");
 
+    public async Task<ApiResult<ReminderEditFields>?> GetReminderForEditAsync(Guid id)
+    {
+        using var response = await _http.GetAsync($"api/reminders/{id}");
+        if (response.StatusCode == HttpStatusCode.NotFound)
+            return null;
+
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<ApiResult<ReminderEditFields>>();
+    }
+
+    public async Task<ApiResult?> UpdateReminderAsync(Guid id, ReminderEditFields request)
+    {
+        using var response = await _http.PutAsJsonAsync($"api/reminders/{id}", request);
+        return await response.Content.ReadFromJsonAsync<ApiResult>();
+    }
+
     public async Task<ApiResult<ReminderDto>?> CreateReminderAsync(CreateReminderRequest request)
     {
         var response = await _http.PostAsJsonAsync("api/reminders", request);

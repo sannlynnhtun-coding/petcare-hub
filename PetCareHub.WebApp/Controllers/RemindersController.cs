@@ -48,6 +48,38 @@ public class RemindersController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Edit([FromRoute] Guid id)
+    {
+        var result = await _api.GetReminderForEditAsync(id);
+        if (result?.Data is null)
+        {
+            TempData["Error"] = "Pending reminder not found.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View(result.Data);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit([FromRoute] Guid id, ReminderEditFields model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var result = await _api.UpdateReminderAsync(id, model);
+        if (result?.IsSuccess != true)
+        {
+            ModelState.AddModelError(string.Empty, string.IsNullOrEmpty(result?.Message)
+                ? "Failed to update reminder."
+                : result.Message);
+            return View(model);
+        }
+
+        TempData["Success"] = result.Message;
+        return RedirectToAction(nameof(Index));
+    }
+
     [HttpPost]
     public async Task<IActionResult> Complete(Guid id)
     {

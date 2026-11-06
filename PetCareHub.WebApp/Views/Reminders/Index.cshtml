@@ -43,7 +43,8 @@ else
                             <p class="text-sm text-gray-500">@r.PetName • Due @r.DueDate.ToString("MMM dd, yyyy")</p>
                         </div>
                     </div>
-                    <form asp-action="Complete" method="post">
+                    <form asp-action="Complete" method="post" class="flex flex-wrap items-center justify-end gap-2">
+                        <a asp-action="Edit" asp-route-id="@r.Id" aria-label="Edit @r.Title" class="px-3 py-1.5 text-sm text-sky-700 hover:underline">Edit</a>
                         <input type="hidden" name="id" value="@r.Id" />
                         <button type="submit" class="px-3 py-1.5 text-sm rounded-lg bg-green-50 text-green-700 hover:bg-green-100 font-medium">
                             Mark Done
