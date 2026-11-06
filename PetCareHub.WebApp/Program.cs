@@ -17,7 +17,8 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler(error => error.Run(context =>
+        Results.Problem().ExecuteAsync(context)));
 }
 
 app.UseStaticFiles();
