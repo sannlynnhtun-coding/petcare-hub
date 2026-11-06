@@ -120,6 +120,15 @@ public class ReminderService : IReminderService
             return Result.Failure("Type is required.");
 
         var type = _strategyFactory.GetStrategy(request.Type).Type;
+        if (!string.Equals(type, request.Type, StringComparison.OrdinalIgnoreCase))
+        {
+            var existing = await _reminderRepository.GetPendingByIdAsync(userId, id);
+            if (existing?.Type != request.Type)
+                return Result.Failure("Select a valid reminder type.");
+
+            type = request.Type;
+        }
+
         var updated = await _reminderRepository.TryUpdatePendingAsync(
             userId, id, request.Title.Trim(), type, request.DueDate, request.Notes?.Trim());
         return updated == 0
