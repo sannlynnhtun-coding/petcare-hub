@@ -63,7 +63,7 @@ dotnet run
 ## Features in UI
 
 - **Dashboard** – pets count + upcoming reminders
-- **Pets** – list, create, view details
+- **Pets** – list, create, view details, and edit profiles
 - **Reminders** – create, edit and complete reminders from the list of all pending tasks. The Dashboard shows overdue tasks and tasks due through the next 14 days.
 
 ## UI
