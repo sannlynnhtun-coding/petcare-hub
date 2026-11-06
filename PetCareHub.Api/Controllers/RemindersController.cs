@@ -30,6 +30,20 @@ public class RemindersController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetForEdit(Guid id)
+    {
+        var result = await _reminderService.GetPendingForEditAsync(DemoUserId, id);
+        return result.IsSuccess ? Ok(result) : NotFound(result);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, ReminderEditFields request)
+    {
+        var result = await _reminderService.UpdatePendingAsync(DemoUserId, id, request);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateReminderRequest request)
     {

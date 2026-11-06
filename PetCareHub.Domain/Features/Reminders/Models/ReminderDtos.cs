@@ -8,6 +8,8 @@ public record CreateReminderRequest(
     DateTime DueDate
 );
 
+public record ReminderEditFields(string Type, string Title, string? Notes, DateTime DueDate);
+
 public record ReminderDto(
     Guid Id,
     Guid PetId,

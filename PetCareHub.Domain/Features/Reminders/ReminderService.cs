@@ -100,6 +100,33 @@ public class ReminderService : IReminderService
         return Result<List<ReminderDto>>.Success(reminders.Select(MapForList).ToList());
     }
 
+    public async Task<Result<ReminderEditFields>> GetPendingForEditAsync(Guid userId, Guid id)
+    {
+        var reminder = await _reminderRepository.GetPendingByIdAsync(userId, id);
+        return reminder is null
+            ? Result<ReminderEditFields>.Failure("Pending reminder not found.")
+            : Result<ReminderEditFields>.Success(new(reminder.Type, reminder.Title, reminder.Notes, reminder.DueDate));
+    }
+
+    public async Task<Result> UpdatePendingAsync(Guid userId, Guid id, ReminderEditFields request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Title))
+            return Result.Failure("Title is required.");
+
+        if (request.DueDate == default)
+            return Result.Failure("Due date is required.");
+
+        if (string.IsNullOrWhiteSpace(request.Type))
+            return Result.Failure("Type is required.");
+
+        var type = _strategyFactory.GetStrategy(request.Type).Type;
+        var updated = await _reminderRepository.TryUpdatePendingAsync(
+            userId, id, request.Title.Trim(), type, request.DueDate, request.Notes?.Trim());
+        return updated == 0
+            ? Result.Failure("Pending reminder not found. It may have already been completed.")
+            : Result.Success("Reminder updated.");
+    }
+
     private ReminderDto MapForList(Reminder reminder) => new(
         reminder.Id,
         reminder.PetId,

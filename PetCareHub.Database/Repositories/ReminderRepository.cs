@@ -31,6 +31,17 @@ public class ReminderRepository : IReminderRepository
     public Task<List<Reminder>> GetPendingByUserAsync(Guid userId) =>
         PendingByUser(userId).Include(r => r.Pet).OrderBy(r => r.DueDate).ToListAsync();
 
+    public Task<Reminder?> GetPendingByIdAsync(Guid userId, Guid id) =>
+        PendingByUser(userId).FirstOrDefaultAsync(r => r.Id == id);
+
+    public Task<int> TryUpdatePendingAsync(Guid userId, Guid id, string title, string type, DateTime dueDate, string? notes) =>
+        PendingByUser(userId).Where(r => r.Id == id)
+            .ExecuteUpdateAsync(update => update
+                .SetProperty(r => r.Title, title)
+                .SetProperty(r => r.Type, type)
+                .SetProperty(r => r.DueDate, dueDate)
+                .SetProperty(r => r.Notes, notes));
+
     private IQueryable<Reminder> PendingByUser(Guid userId) =>
         _db.Reminders.Where(r => r.Pet!.UserId == userId && !r.IsCompleted);
 
