@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using PetCareHub.WebApp.Models;
 
@@ -20,7 +21,12 @@ public class PetCareApiClient
 
     public async Task<ApiResult<PetDto>?> GetPetAsync(Guid id)
     {
-        return await _http.GetFromJsonAsync<ApiResult<PetDto>>($"api/pets/{id}");
+        using var response = await _http.GetAsync($"api/pets/{id}");
+        if (response.StatusCode == HttpStatusCode.NotFound)
+            return null;
+
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<ApiResult<PetDto>>();
     }
 
     public async Task<ApiResult<PetDto>?> CreatePetAsync(CreatePetRequest request)

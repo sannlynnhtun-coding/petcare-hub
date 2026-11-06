@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Mvc;
 using PetCareHub.WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
 // API Base URL - change port if your API runs on different port
 var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:5280/";

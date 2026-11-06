@@ -12,6 +12,7 @@ public class ReminderStrategyFactory
             ["Vaccination"] = new VaccinationReminderStrategy(),
             ["Medicine"] = new MedicineReminderStrategy(),
             ["Grooming"] = new GroomingReminderStrategy(),
+            ["Checkup"] = new CheckupReminderStrategy(),
             ["Custom"] = new DefaultReminderStrategy()
         };
     }

@@ -34,6 +34,9 @@ public class ReminderService : IReminderService
         if (string.IsNullOrWhiteSpace(request.Title))
             return Result<ReminderDto>.Failure("Title is required.");
 
+        if (request.DueDate == default)
+            return Result<ReminderDto>.Failure("Due date is required.");
+
         var strategy = _strategyFactory.GetStrategy(request.Type);
 
         var reminder = new Reminder
@@ -76,14 +79,8 @@ public class ReminderService : IReminderService
         if (pet is null)
             return Result.Failure("Reminder not found.");
 
-        if (reminder.IsCompleted)
+        if (reminder.IsCompleted || await _reminderRepository.TryCompleteAsync(reminder.Id, DateTime.UtcNow) == 0)
             return Result.Failure("Reminder is already completed.");
-
-        reminder.IsCompleted = true;
-        reminder.CompletedAt = DateTime.UtcNow;
-
-        await _reminderRepository.UpdateAsync(reminder);
-        await _reminderRepository.SaveChangesAsync();
 
         // Observer
         await _eventDispatcher.DispatchAsync(new ReminderCompletedEvent(reminder.Id, reminder.Title));

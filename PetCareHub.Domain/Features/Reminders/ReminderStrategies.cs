@@ -28,6 +28,15 @@ public class GroomingReminderStrategy : IReminderStrategy
     public bool IsOverdue(DateTime dueDate) => dueDate.Date < DateTime.UtcNow.Date;
 }
 
+public class CheckupReminderStrategy : IReminderStrategy
+{
+    public string Type => "Checkup";
+
+    public string GetDisplayTitle(string title) => $"[Checkup] {title}";
+
+    public bool IsOverdue(DateTime dueDate) => dueDate.Date < DateTime.UtcNow.Date;
+}
+
 public class DefaultReminderStrategy : IReminderStrategy
 {
     public string Type => "Custom";

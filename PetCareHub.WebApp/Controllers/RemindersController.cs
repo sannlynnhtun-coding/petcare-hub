@@ -51,8 +51,11 @@ public class RemindersController : Controller
     [HttpPost]
     public async Task<IActionResult> Complete(Guid id)
     {
-        await _api.CompleteReminderAsync(id);
-        TempData["Success"] = "Reminder marked as completed!";
+        var result = await _api.CompleteReminderAsync(id);
+        if (result?.IsSuccess == true)
+            TempData["Success"] = result.Message;
+        else
+            TempData["Error"] = result?.Message ?? "Failed to complete reminder.";
         return RedirectToAction(nameof(Index));
     }
 }

@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace PetCareHub.WebApp.Models;
 
 // Shared Result from API
@@ -59,5 +61,6 @@ public class CreateReminderRequest
     public string Type { get; set; } = "Custom";
     public string Title { get; set; } = string.Empty;
     public string? Notes { get; set; }
+    [BindRequired]
     public DateTime DueDate { get; set; } = DateTime.Today.AddDays(7);
 }

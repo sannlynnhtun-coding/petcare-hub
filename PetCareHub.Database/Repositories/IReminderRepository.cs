@@ -8,6 +8,6 @@ public interface IReminderRepository
     Task<List<Reminder>> GetUpcomingByUserAsync(Guid userId, int days = 14);
     Task<List<Reminder>> GetByPetAsync(Guid petId);
     Task AddAsync(Reminder reminder);
-    Task UpdateAsync(Reminder reminder);
+    Task<int> TryCompleteAsync(Guid id, DateTime completedAt);
     Task SaveChangesAsync();
 }

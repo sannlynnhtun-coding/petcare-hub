@@ -41,10 +41,12 @@ public class ReminderRepository : IReminderRepository
         await _db.Reminders.AddAsync(reminder);
     }
 
-    public async Task UpdateAsync(Reminder reminder)
+    public Task<int> TryCompleteAsync(Guid id, DateTime completedAt)
     {
-        _db.Reminders.Update(reminder);
-        await Task.CompletedTask;
+        return _db.Reminders.Where(r => r.Id == id && !r.IsCompleted)
+            .ExecuteUpdateAsync(update => update
+                .SetProperty(r => r.IsCompleted, true)
+                .SetProperty(r => r.CompletedAt, completedAt));
     }
 
     public async Task SaveChangesAsync()

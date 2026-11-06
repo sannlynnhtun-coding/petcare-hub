@@ -48,6 +48,9 @@ public class PetService : IPetService
         if (pet is null)
             return Result.Failure("Pet not found.");
 
+        if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.Species))
+            return Result.Failure("Pet name and species are required.");
+
         pet.Name = request.Name.Trim();
         pet.Species = request.Species.Trim();
         pet.Breed = request.Breed?.Trim();
