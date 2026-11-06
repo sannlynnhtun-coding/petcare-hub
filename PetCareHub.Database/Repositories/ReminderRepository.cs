@@ -12,9 +12,9 @@ public class ReminderRepository : IReminderRepository
         _db = db;
     }
 
-    public async Task<Reminder?> GetByIdAsync(Guid id)
+    public async Task<Reminder?> GetByIdAsync(Guid userId, Guid id)
     {
-        return await _db.Reminders.FirstOrDefaultAsync(r => r.Id == id);
+        return await OwnedByUser(userId).FirstOrDefaultAsync(r => r.Id == id);
     }
 
     public async Task<List<Reminder>> GetUpcomingByUserAsync(Guid userId, int days = 14)
@@ -43,24 +43,19 @@ public class ReminderRepository : IReminderRepository
                 .SetProperty(r => r.Notes, notes));
 
     private IQueryable<Reminder> PendingByUser(Guid userId) =>
-        _db.Reminders.Where(r => r.Pet!.UserId == userId && !r.IsCompleted);
+        OwnedByUser(userId).Where(r => !r.IsCompleted);
 
-    public async Task<List<Reminder>> GetByPetAsync(Guid petId)
-    {
-        return await _db.Reminders
-            .Where(r => r.PetId == petId)
-            .OrderBy(r => r.DueDate)
-            .ToListAsync();
-    }
+    private IQueryable<Reminder> OwnedByUser(Guid userId) =>
+        _db.Reminders.Where(r => r.Pet!.UserId == userId);
 
     public async Task AddAsync(Reminder reminder)
     {
         await _db.Reminders.AddAsync(reminder);
     }
 
-    public Task<int> TryCompleteAsync(Guid id, DateTime completedAt)
+    public Task<int> TryCompleteAsync(Guid userId, Guid id, DateTime completedAt)
     {
-        return _db.Reminders.Where(r => r.Id == id && !r.IsCompleted)
+        return PendingByUser(userId).Where(r => r.Id == id)
             .ExecuteUpdateAsync(update => update
                 .SetProperty(r => r.IsCompleted, true)
                 .SetProperty(r => r.CompletedAt, completedAt));

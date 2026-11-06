@@ -70,16 +70,11 @@ public class ReminderService : IReminderService
 
     public async Task<Result> CompleteAsync(Guid userId, Guid reminderId)
     {
-        var reminder = await _reminderRepository.GetByIdAsync(reminderId);
+        var reminder = await _reminderRepository.GetByIdAsync(userId, reminderId);
         if (reminder is null)
             return Result.Failure("Reminder not found.");
 
-        // Simple ownership check via pet
-        var pet = await _petRepository.GetByIdAsync(reminder.PetId, userId);
-        if (pet is null)
-            return Result.Failure("Reminder not found.");
-
-        if (reminder.IsCompleted || await _reminderRepository.TryCompleteAsync(reminder.Id, DateTime.UtcNow) == 0)
+        if (reminder.IsCompleted || await _reminderRepository.TryCompleteAsync(userId, reminder.Id, DateTime.UtcNow) == 0)
             return Result.Failure("Reminder is already completed.");
 
         // Observer
