@@ -56,7 +56,7 @@ try {
 
     $petName = "Smoke Pet $([guid]::NewGuid())"
     $form = Invoke-WebRequest "$webUrl/Pets/Create" -SessionVariable browser
-    $petFields = @{ Name = $petName; Species = 'Dog' }
+    $petFields = @{ Name = $petName; Species = 'Ferret'; Gender = 'Unknown'; PhotoUrl = 'https://example.test/pet.jpg' }
     $blocked = Invoke-WebRequest "$webUrl/Pets/Create" -Method Post -Body $petFields -WebSession $browser -SkipHttpErrorCheck
     Assert ($blocked.StatusCode -eq 400) 'A write without an antiforgery token succeeded.'
     $petFields.__RequestVerificationToken = Read-Token $form
@@ -67,6 +67,35 @@ try {
     Assert ($details.Content.Contains($petName)) 'The pet details are missing.'
     $missing = Invoke-WebRequest "$webUrl/Pets/Details/$([guid]::NewGuid())"
     Assert ($missing.BaseResponse.RequestMessage.RequestUri.AbsolutePath -eq '/Pets') 'Missing pet did not redirect to the list.'
+
+    $petEditUrl = "$webUrl/Pets/Edit/$($pet.id)"
+    Assert ($details.Content.Contains("/Pets/Edit/$($pet.id)")) 'Pet Details did not link to Edit.'
+    $petEdit = Invoke-WebRequest $petEditUrl -WebSession $browser
+    Assert ($petEdit.Content -match 'value="Ferret" selected' -and $petEdit.Content -match 'value="Unknown" selected' -and
+        $petEdit.Content.Contains('https://example.test/pet.jpg') -and $petEdit.Content.Contains($petName)) 'Pet Edit did not prefill the stored profile.'
+    $editedPetName = "$petName edited"
+    $petEditFields = @{
+        Name = $editedPetName
+        Species = 'Ferret'
+        Gender = 'Unknown'
+        Notes = 'Edited pet notes'
+        DateOfBirth = '2020-03-04'
+        PhotoUrl = $pet.photoUrl
+    }
+    $blockedEdit = Invoke-WebRequest $petEditUrl -Method Post -Body $petEditFields -WebSession $browser -SkipHttpErrorCheck
+    Assert ($blockedEdit.StatusCode -eq 400) 'Pet Edit accepted a POST without an antiforgery token.'
+    $petEditFields.__RequestVerificationToken = Read-Token $petEdit
+    $invalidPetEdit = $petEditFields.Clone()
+    $invalidPetEdit.DateOfBirth = 'invalid-date'
+    $rejectedPetEdit = Invoke-WebRequest $petEditUrl -Method Post -Body $invalidPetEdit -WebSession $browser
+    $storedPet = (Invoke-RestMethod "$apiUrl/api/pets/$($pet.id)").data
+    Assert ($rejectedPetEdit.Content -match 'validation-summary-errors' -and $rejectedPetEdit.Content.Contains($editedPetName) -and
+        $storedPet.name -eq $petName) 'Invalid pet edits failed to retain input or changed the stored pet.'
+    $updatedPetDetails = Invoke-WebRequest $petEditUrl -Method Post -Body $petEditFields -WebSession $browser
+    Assert ($updatedPetDetails.BaseResponse.RequestMessage.RequestUri.AbsolutePath -eq "/Pets/Details/$($pet.id)" -and
+        $updatedPetDetails.Content.Contains($editedPetName) -and $updatedPetDetails.Content.Contains('Edited pet notes')) 'Pet Edit did not save and return to Details.'
+    $missingPetEdit = Invoke-WebRequest "$webUrl/Pets/Edit/$([guid]::NewGuid())" -SkipHttpErrorCheck
+    Assert ($missingPetEdit.StatusCode -eq 404) 'Pet Edit did not return 404 for a missing pet.'
 
     $form = Invoke-WebRequest "$webUrl/Reminders/Create" -WebSession $browser
     $reminderFields = @{
@@ -154,7 +183,10 @@ try {
     $api = Start-App 'PetCareHub.Api' $apiUrl $apiEnvironment
     Wait-ForHttp "$apiUrl/api/pets" $api
     $persisted = (Invoke-RestMethod "$apiUrl/api/pets/$($pet.id)").data
-    Assert ($persisted.name -eq $petName) 'The pet did not survive an API restart.'
+    Assert ($persisted.name -eq $editedPetName -and $persisted.notes -eq 'Edited pet notes' -and
+        $persisted.species -eq 'Ferret' -and $persisted.gender -eq 'Unknown' -and
+        $persisted.photoUrl -eq 'https://example.test/pet.jpg' -and
+        ([datetime]$persisted.dateOfBirth).ToString('yyyy-MM-dd') -eq '2020-03-04') 'The edited pet profile did not survive an API restart.'
     $stored = (Invoke-RestMethod $persistedEditApi).data
     Assert ($stored.title -eq 'Persisted edit' -and $stored.type -eq 'Medicine' -and $stored.notes -eq 'Persisted notes' -and
         ([datetime]$stored.dueDate).ToString('yyyy-MM-dd') -eq $fields.DueDate) 'The reminder edit did not survive restart.'
