@@ -4,6 +4,7 @@ namespace PetCareHub.Database;
 
 public static class DbInitializer
 {
+    // For MVP we use a fixed demo user. In a real app use JWT claims.
     public static readonly Guid DemoUserId = Guid.Parse("11111111-1111-1111-1111-111111111111");
 
     public static void Seed(AppDbContext db)
