@@ -30,7 +30,7 @@ public class PetDto
     public DateTime CreatedAt { get; set; }
 }
 
-public class CreatePetRequest
+public class PetProfileRequest
 {
     public string Name { get; set; } = string.Empty;
     public string Species { get; set; } = string.Empty;

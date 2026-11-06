@@ -29,10 +29,16 @@ public class PetCareApiClient
         return await response.Content.ReadFromJsonAsync<ApiResult<PetDto>>();
     }
 
-    public async Task<ApiResult<PetDto>?> CreatePetAsync(CreatePetRequest request)
+    public async Task<ApiResult<PetDto>?> CreatePetAsync(PetProfileRequest request)
     {
         var response = await _http.PostAsJsonAsync("api/pets", request);
         return await response.Content.ReadFromJsonAsync<ApiResult<PetDto>>();
+    }
+
+    public async Task<ApiResult?> UpdatePetAsync(Guid id, PetProfileRequest request)
+    {
+        using var response = await _http.PutAsJsonAsync($"api/pets/{id}", request);
+        return await response.Content.ReadFromJsonAsync<ApiResult>();
     }
 
     // ===== Reminders =====

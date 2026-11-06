@@ -21,11 +21,11 @@ public class PetsController : Controller
 
     public IActionResult Create()
     {
-        return View(new CreatePetRequest());
+        return View(new PetProfileRequest());
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreatePetRequest model)
+    public async Task<IActionResult> Create(PetProfileRequest model)
     {
         if (!ModelState.IsValid)
             return View(model);
@@ -40,6 +40,44 @@ public class PetsController : Controller
 
         TempData["Success"] = "Pet created successfully!";
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit([FromRoute] Guid id)
+    {
+        var result = await _api.GetPetAsync(id);
+        if (result?.Data is not { } pet || !result.IsSuccess)
+            return NotFound();
+
+        return View(new PetProfileRequest
+        {
+            Name = pet.Name,
+            Species = pet.Species,
+            Breed = pet.Breed,
+            DateOfBirth = pet.DateOfBirth,
+            Gender = pet.Gender,
+            Notes = pet.Notes,
+            PhotoUrl = pet.PhotoUrl
+        });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit([FromRoute] Guid id, PetProfileRequest model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var result = await _api.UpdatePetAsync(id, model);
+        if (result?.IsSuccess != true)
+        {
+            ModelState.AddModelError(string.Empty, string.IsNullOrEmpty(result?.Message)
+                ? "Failed to update pet."
+                : result.Message);
+            return View(model);
+        }
+
+        TempData["Success"] = result.Message;
+        return RedirectToAction(nameof(Details), new { id });
     }
 
     public async Task<IActionResult> Details(Guid id)
